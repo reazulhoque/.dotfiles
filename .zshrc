@@ -12,7 +12,7 @@ ulimit -c unlimited
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="agnoster"
+ZSH_THEME="jnrowe"
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
 
@@ -61,7 +61,10 @@ plugins=(git)
 
 # export MANPATH="/usr/local/man:$MANPATH"
 source $ZSH/oh-my-zsh.sh
-export DOTFILES=$HOME/.dotfiles
+
+# Not generic, make it work for your env
+#export DOTFILES=$HOME/.dotfiles
+
 # You may need to manually set your language environment
 # export LANG=en_US.UTF-8
 
@@ -72,75 +75,99 @@ export DOTFILES=$HOME/.dotfiles
 #   export EDITOR='mvim'
 # fi
 
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
 
+# ssh
+# export SSH_KEY_PATH="~/.ssh/dsa_id"
 
-export MPI_DIR=${HOME}/opt/mpi
-export PATH=${MPI_DIR}/bin:${HOME}/opt/bin:${PATH}
-export LD_LIBRARY_PATH=${MPI_DIR}/lib:${HOME}/opt/lib:${LD_LIBRARY_PATH}
-
-SSH_ENV="$HOME/.ssh/environment"
-
-function start_agent {
-    echo "Initialising new SSH agent..."
-    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
-    echo succeeded
-    chmod 600 "${SSH_ENV}"
-		    . "${SSH_ENV}" > /dev/null
-    /usr/bin/ssh-add ~/.ssh/dancer;
-}
-
-if [ "$HOSTNAME" = dancer.icl.utk.edu ]; then
-
-	# Source SSH settings, if applicable
-	 if [ -f "${SSH_ENV}" ]; then
-	     	. "${SSH_ENV}" > /dev/null
-    	 	ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
-       		 	             start_agent;
-   		 }
- 	else
-   	start_agent;
- 	fi
-
-fi
-
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
+#
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
 export TAG_ALIAS_FILE=${HOME}/opt/tagalias
 export TAG_COMMAND=${HOME}/opt/bin/tag_exe
 tag() { $TAG_COMMAND "$@"; source ${TAG_ALIAS_FILE} 2>/dev/null }
-    alias ag=tag
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+fd() {
+    local dir
+    dir=$(find ${1:-.} -path '*/\.*' -prune \
+                        -o -type d -print 2> /dev/null | fzf +m) &&
+    cd "$dir"
+}
+
+#export MPI_DIR=${HOME}/opt/mpi
+#export PATH=${MPI_DIR}/bin:${HOME}/opt/bin:${PATH}
+#export LD_LIBRARY_PATH=${MPI_DIR}/lib:${HOME}/opt/lib:${LD_LIBRARY_PATH}
+
+#SSH_ENV="$HOME/.ssh/environment"
+
+#function start_agent {
+#    echo "Initialising new SSH agent..."
+#    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+#    echo succeeded
+#    chmod 600 "${SSH_ENV}"
+#		    . "${SSH_ENV}" > /dev/null
+#    /usr/bin/ssh-add ~/.ssh/dancer;
+#}
+
+#if [ "$HOSTNAME" = dancer.icl.utk.edu ]; then
+
+	# Source SSH settings, if applicable
+#	 if [ -f "${SSH_ENV}" ]; then
+#	     	. "${SSH_ENV}" > /dev/null
+#    	 	ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+#       		 	             start_agent;
+#   		 }
+# 	else
+#   	start_agent;
+# 	fi
+#fi
+
+#export TAG_ALIAS_FILE=${HOME}/opt/tagalias
+#export TAG_COMMAND=${HOME}/opt/bin/tag_exe
+#tag() { $TAG_COMMAND "$@"; source ${TAG_ALIAS_FILE} 2>/dev/null }
+#    alias ag=tag
+
+#[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # vf - fuzzy open with vim from anywhere
 # # ex: vf word1 word2 ... (even part of a file name)
 # # zsh autoload function
-vf() {
-   local files
+#vf() {
+#   local files
+#
+#    files=(${(f)"$(locate -i -0 $@ | grep -z -vE '~$' | fzf --read0 -0 -1 -m)"})
+#
+#    if [[ -n $files ]]
+#        then
+#             vim -- $files
+#             print -l $files[1]
+#    fi
+#}
 
-    files=(${(f)"$(locate -i -0 $@ | grep -z -vE '~$' | fzf --read0 -0 -1 -m)"})
+#fd() {
+#  local dir
+#  dir=$(find ${1:-.} -path '*/\.*' -prune \
+#                  -o -type d -print 2> /dev/null | fzf +m) &&
+#  cd "$dir"
+#}
 
-    if [[ -n $files ]]
-        then
-             vim -- $files
-             print -l $files[1]
-    fi
-}
+#v() {
+#  local file
+#  file=$(find ${1:-.} -path '*/\.*' -prune \
+#                  -o -type f -print 2> /dev/null | fzf +m) &&
+#  vim "$file"
+#}
 
-fd() {
-  local dir
-  dir=$(find ${1:-.} -path '*/\.*' -prune \
-                  -o -type d -print 2> /dev/null | fzf +m) &&
-  cd "$dir"
-}
-
-v() {
-  local file
-  file=$(find ${1:-.} -path '*/\.*' -prune \
-                  -o -type f -print 2> /dev/null | fzf +m) &&
-  vim "$file"
-}
-
-dump() {
-     ${1:-.} > /dev/null;
-     ${1:-.}
-}
+#dump() {
+#     ${1:-.} > /dev/null;
+#     ${1:-.}
+#}
 
