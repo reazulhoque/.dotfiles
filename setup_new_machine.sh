@@ -21,5 +21,8 @@ mkdir ~/opt
 mkdir ~/opt/bin
 cp mybin/* ~/opt/bin
 
+#for setting up tmux-resurrect
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
 echo "Done! : Dont forget to run :PlugInstall in vim"
 
